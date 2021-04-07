@@ -173,7 +173,7 @@ window.onload = function () {
             // Put the data from the cursor inside the h3 and para
             h3.textContent = cursor.value.firstName + cursor.value.lastName;
             para.textContent = cursor.value.make + " " + cursor.value.model;
-
+            var idx=cursor.value.id;
             // Store the ID of the data item inside an attribute on the listItem, so we know
             // which item it corresponds to. This will be useful later when we want to delete items
             listItem.setAttribute('data-aution-id', cursor.value.id);
@@ -184,7 +184,7 @@ window.onload = function () {
             let detailsBtn = document.createElement('button');
             listItem.appendChild(detailsBtn);
             detailsBtn.textContent = 'Details!';
-            detailsBtn.onclick = details(cursor.value.id);
+            detailsBtn.setAttribute ("onclick",'details('+idx+')');
             // Set an event handler so that when the button is clicked, the deleteItem()
             // function is run
             deleteBtn.onclick = deleteItem;
@@ -245,7 +245,7 @@ function details(ex) {
    let h3 = document.createElement('h4');
    
    listItem.appendChild(h3);
-   cardList.appendChild(listItem);
+   
    // Open our object store and then get a cursor - which iterates through all the
    // different data items in the store
    let objectStore = db.transaction('carAuction').objectStore('carAuction');
