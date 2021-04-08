@@ -14,19 +14,20 @@ namespace TestCarAuction
     {
 
         IWebDriver driver;
+        DirectoryInfo basepath = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent.Parent;
         [OneTimeSetUp]
         public void Setup()
         {
-            driver = new ChromeDriver();
-            var path = Directory.GetCurrentDirectory();
-            driver.Url = "D:\\Fiverr\\____Canada\\paaJi\\Question2\\index.html";
+           
+            
+         
         }
         
         [Test]
         public void TestEmailTextbox()
         {
-          
-            
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
             IWebElement createLink = driver.FindElement(By.Id("createLink"));
             createLink.Click();
             IWebElement tb = driver.FindElement(By.Id("email"));
@@ -49,8 +50,8 @@ namespace TestCarAuction
         [Test]
         public void TestEmailTextboxInvalid()
         {
-           
-
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
             IWebElement createLink = driver.FindElement(By.Id("createLink"));
             createLink.Click();
             IWebElement tb = driver.FindElement(By.Id("email"));
@@ -74,8 +75,8 @@ namespace TestCarAuction
         [Test]
         public void TestPhoneTextbox()
         {
-           
-
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
             IWebElement createLink = driver.FindElement(By.Id("createLink"));
             createLink.Click();
             IWebElement tb = driver.FindElement(By.Id("phone"));
@@ -99,7 +100,8 @@ namespace TestCarAuction
         [Test]
         public void TestPhoneTextboxInvalid()
         {
-           
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
 
             IWebElement createLink = driver.FindElement(By.Id("createLink"));
             createLink.Click();
@@ -124,7 +126,8 @@ namespace TestCarAuction
         [Test]
         public void TestPostalCodeTextbox()
         {
-           
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
 
             IWebElement createLink = driver.FindElement(By.Id("createLink"));
             createLink.Click();
@@ -149,8 +152,8 @@ namespace TestCarAuction
         [Test]
         public void TestPostalCodeTextboxInvalid()
         {
-           
-
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
             IWebElement createLink = driver.FindElement(By.Id("createLink"));
             createLink.Click();
             IWebElement tb = driver.FindElement(By.Id("postalCode"));
@@ -174,8 +177,8 @@ namespace TestCarAuction
         [Test]
         public void TestHomeLink()
         {
-         
-            
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
             IWebElement link = driver.FindElement(By.Id("homeLink"));
             link.Click();
             Thread.Sleep(700);
@@ -195,7 +198,8 @@ namespace TestCarAuction
         [Test]
         public void TestCreateLink()
         {
-          
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
             IWebElement ContentDiv = driver.FindElement(By.Id("forms"));
             IWebElement link = driver.FindElement(By.Id("createLink"));
             link.Click();
