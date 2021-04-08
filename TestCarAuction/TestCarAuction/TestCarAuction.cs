@@ -22,7 +22,7 @@ namespace TestCarAuction
             
          
         }
-        
+        //Test box tests
         [Test]
         public void TestEmailTextbox()
         {
@@ -174,6 +174,7 @@ namespace TestCarAuction
                 Assert.Fail();
             }
         }
+        //link tests
         [Test]
         public void TestHomeLink()
         {
@@ -204,6 +205,71 @@ namespace TestCarAuction
             IWebElement link = driver.FindElement(By.Id("createLink"));
             link.Click();
             Thread.Sleep(700);
+            string bc = ContentDiv.GetCssValue("display");
+
+            if (!string.IsNullOrEmpty(bc) && bc == "block")
+            {
+                Assert.Pass();
+
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+        //Detailed functionality tests
+        [Test]
+        public void TestEntry()
+        {
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
+            IWebElement link = driver.FindElement(By.Id("createLink"));
+            link.Click();
+            Thread.Sleep(700);
+            IWebElement email = driver.FindElement(By.Id("email"));
+            email.SendKeys("a@test.com");
+            IWebElement phone = driver.FindElement(By.Id("phone"));
+            phone.SendKeys("123-345-4567");
+            IWebElement firstName = driver.FindElement(By.Id("firstName"));
+            firstName.SendKeys("abc");
+            IWebElement lastName = driver.FindElement(By.Id("lastName"));
+            lastName.SendKeys("def");
+            IWebElement address = driver.FindElement(By.Id("address"));
+            address.SendKeys("1234 main st");
+
+            IWebElement city = driver.FindElement(By.Id("city"));
+            city.SendKeys("Quebec");
+            IWebElement postalCode = driver.FindElement(By.Id("postalCode"));
+            postalCode.SendKeys("A1A 1A1");
+            IWebElement submitBtn = driver.FindElement(By.Id("submitBtn"));
+
+            submitBtn.Click();
+            Thread.Sleep(5000);
+            IWebElement link2 = driver.FindElement(By.Id("homeLink"));
+            link2.Click();
+            IWebElement ContentDiv = driver.FindElement(By.Id("listDetails"));
+            Thread.Sleep(500);
+            string bc = ContentDiv.GetCssValue("display");
+
+            if (!string.IsNullOrEmpty(bc) && bc == "block")
+            {
+                Assert.Pass();
+
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+        [Test]
+        public void TestEntryDetails()
+        {
+            driver = new ChromeDriver(basepath + "\\webdriver");
+            driver.Url = basepath + "\\index.html";
+            IWebElement link = driver.FindElement(By.Id("homeLink"));
+            link.Click();
+            Thread.Sleep(700);
+            IWebElement ContentDiv = driver.FindElement(By.Id("listDetails"));
             string bc = ContentDiv.GetCssValue("display");
 
             if (!string.IsNullOrEmpty(bc) && bc == "block")

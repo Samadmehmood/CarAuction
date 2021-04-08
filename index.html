@@ -96,7 +96,7 @@
           </div>
           <div class="form-group">
             <label for="inputAddress">Address</label>
-            <input id="addressValidity" type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
@@ -160,11 +160,15 @@
             </div>
             <div class="form-group col-md-3">
               <label for="year">Year</label>
-              <input id="yearValidity" type="number" class="form-control" value="2003" id="year" min="2003" max="2021" required>
+              <input  type="number" class="form-control" value="2003" id="year" min="2003" max="2021" required>
+              <div id="yearValidity" class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please enter a valid year</div>
             </div>
             <div class="form-group col-md-3">
               <label for="price">Price</label>
-              <input id="priceValidity" type="number" class="form-control" value="999" id="price" min="100" max="200000" required>
+              <input type="number" class="form-control" value="999" id="price" min="100" max="200000" required>
+              <div id="priceValidity" class="valid-feedback">Looks good!</div>
+              <div class="invalid-feedback">Please enter a valid price</div>
             </div>
           </div>
           <button class="btn btn-primary" type="submit" id="submitBtn">Add</button>
