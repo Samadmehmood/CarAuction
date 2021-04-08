@@ -30,8 +30,8 @@
         </li>
       </ul>
       <div class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="button">Search</button>
+        <input class="form-control mr-sm-2" type="text" id="searchTb" placeholder="Search" aria-label="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="button" onclick="search()">Search</button>
       </div>
     </div>
   </nav>
@@ -68,14 +68,14 @@
             <div class="form-group col-md-6">
               <label for="email">Email</label>
               <input type="email" class="form-control" id="email" required>
-              <div class="valid-feedback">Looks good!</div>
+              <div id="emailValidity" class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Please enter a valid Email</div>
             </div>
             <div class="form-group col-md-6">
               <label for="phone">Phone Number</label>
               <input type="tel" pattern="^\d{3}-\d{3}-\d{4}$" placeholder="123-123-1234" class="form-control" id="phone"
                 required>
-              <div class="valid-feedback">Looks good!</div>
+              <div id="phoneValidity" class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Follow Format 123-123-1234 </div>
             </div>
 
@@ -84,25 +84,25 @@
             <div class="form-group col-md-6">
               <label>First Name</label>
               <input type="text" pattern="[a-zA-Z]*" class="form-control" id="firstName" required>
-              <div class="valid-feedback">Looks good!</div>
+              <div id="fnameValidity" class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Use only letters from A-z! </div>
             </div>
             <div class="form-group col-md-6">
               <label>Last Name</label>
               <input type="text" pattern="[a-zA-Z]*" class="form-control" id="lastName" required>
-              <div class="valid-feedback">Looks good!</div>
+              <div id="lnameValidity" class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Use only letters from A-z! </div>
             </div>
           </div>
           <div class="form-group">
             <label for="inputAddress">Address</label>
-            <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+            <input id="addressValidity" type="text" class="form-control" id="address" placeholder="1234 Main St" required>
           </div>
           <div class="form-row">
             <div class="form-group col-md-6">
               <label for="city">City</label>
               <input type="text" pattern="[a-zA-Z]*" class="form-control" id="city" required>
-              <div class="valid-feedback">Looks good!</div>
+              <div id="cityValidity" class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Use only letters from A-z! </div>
             </div>
             <div class="form-group col-md-4">
@@ -127,7 +127,7 @@
               <label for="postalCode">Postal Code</label>
               <input type="text" pattern="[A-Za-z][0-9][A-Za-z] [0-9][A-Za-z][0-9]" class="form-control" id="postalCode"
                 required>
-              <div class="valid-feedback">Looks good!</div>
+              <div id="postalCodeValidity" class="valid-feedback">Looks good!</div>
               <div class="invalid-feedback">Please Enter a valid postal code! </div>
             </div>
           </div>
@@ -136,7 +136,7 @@
             Vehicle
           </h4>
           <div class="form-row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label for="make">Make</label>
               <select type="text" class="form-control" id="make">
 
@@ -145,7 +145,7 @@
                 <option value="Ford">Ford</option>
               </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label for="model">Model</label>
               <select type="text" class="form-control" id="model">
 
@@ -158,12 +158,16 @@
                 <option class="focus" value="Focus" data-make="Ford">Focus</option>
               </select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <label for="year">Year</label>
-              <input type="number" class="form-control" value="2000" id="year" min="1990" max="2021" required>
+              <input id="yearValidity" type="number" class="form-control" value="2003" id="year" min="2003" max="2021" required>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="price">Price</label>
+              <input id="priceValidity" type="number" class="form-control" value="999" id="price" min="100" max="200000" required>
             </div>
           </div>
-          <button class="btn btn-primary" type="submit">Add</button>
+          <button class="btn btn-primary" type="submit" id="submitBtn">Add</button>
         </form>
       </div>
     </div>

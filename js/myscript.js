@@ -9,7 +9,7 @@ const listDiv = document.querySelector('#listDetails');
 const detailsDiv = document.querySelector('#detailsDiv');
 const homeLink = document.querySelector('#homeLink');
 const createLink = document.querySelector('#createLink');
-
+const searchTb = document.querySelector('#searchTb');
 // Create an instance of a db object for us to store the open database in
 let db;
 
@@ -81,6 +81,9 @@ window.onload = function () {
       objectStore.createIndex('year', 'year', {
          unique: false
       });
+      objectStore.createIndex('price', 'price', {
+         unique: false
+      });
       console.log('Database setup complete!');
    }
 
@@ -92,55 +95,54 @@ window.onload = function () {
       // prevent default - we don't want the form to submit in the conventional way
       e.preventDefault();
       if (form.checkValidity() === false) {
-        
+
          e.stopPropagation();
-      
-      }
-      else{
-        
- let newItem = {
-         email: email.value,
-         phone: phone.value,
-         firstName: firstName.value,
-         lastName: lastName.value,
-         address: address.value,
-         city: city.value,
-         province: province.value,
-         postalCode: postalCode.value,
-         make: make.value,
-         model: model.value,
-         year: year.value
 
-      };
+      } else {
 
-      // open a read/write db transaction, ready for adding the data
-      let transaction = db.transaction(['carAuction'], 'readwrite');
+         let newItem = {
+            email: email.value,
+            phone: phone.value,
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value.toUpperCase(),
+            province: province.value,
+            postalCode: postalCode.value,
+            make: make.value.toUpperCase(),
+            model: model.value.toUpperCase(),
+            year: year.value,
+            price: price.value
+         };
 
-      // call an object store that's already been added to the database
-      let objectStore = transaction.objectStore('carAuction');
+         // open a read/write db transaction, ready for adding the data
+         let transaction = db.transaction(['carAuction'], 'readwrite');
 
-      // Make a request to add our newItem object to the object store
-      var request = objectStore.add(newItem);
-      request.onsuccess = function () {
-         // Clear the form, ready for adding the next entry
-         form.reset();
-         displayData();
-         showHome();
-      };
+         // call an object store that's already been added to the database
+         let objectStore = transaction.objectStore('carAuction');
 
-      // Report on the success of the transaction completing, when everything is done
-      transaction.oncomplete = function () {
-         console.log('Transaction completed: database modification finished.');
+         // Make a request to add our newItem object to the object store
+         var request = objectStore.add(newItem);
+         request.onsuccess = function () {
+            // Clear the form, ready for adding the next entry
+            form.reset();
+            displayData();
+            showHome();
+         };
 
-      }
-      // update the display of data to show the newly added item, by running displayData() again.
+         // Report on the success of the transaction completing, when everything is done
+         transaction.oncomplete = function () {
+            console.log('Transaction completed: database modification finished.');
 
-      transaction.onerror = function () {
-         console.log('Transaction not opened due to error');
-      }
+         }
+         // update the display of data to show the newly added item, by running displayData() again.
+
+         transaction.onerror = function () {
+            console.log('Transaction not opened due to error');
+         }
       }
       // grab the values entered into the form fields and store them in an object ready for being inserted into the DB
-     
+
 
    }
 
@@ -166,14 +168,19 @@ window.onload = function () {
             let listItem = document.createElement('li');
             let h3 = document.createElement('h4');
             let para = document.createElement('p');
+            let para2 = document.createElement('p');
+
             listItem.appendChild(h3);
             listItem.appendChild(para);
+            listItem.appendChild(para2);
+
             list.appendChild(listItem);
 
             // Put the data from the cursor inside the h3 and para
-            h3.textContent = cursor.value.firstName + cursor.value.lastName;
-            para.textContent = cursor.value.make + " " + cursor.value.model;
-            var idx=cursor.value.id;
+            para.textContent = "Owner: " + cursor.value.firstName + " " + cursor.value.lastName + " City: " + cursor.value.city;
+            para2.html = "<h5>Price: " + cursor.value.price + "</h5>";
+            h3.textContent = cursor.value.make + " " + cursor.value.model;
+            var idx = cursor.value.id;
             // Store the ID of the data item inside an attribute on the listItem, so we know
             // which item it corresponds to. This will be useful later when we want to delete items
             listItem.setAttribute('data-aution-id', cursor.value.id);
@@ -184,7 +191,7 @@ window.onload = function () {
             let detailsBtn = document.createElement('button');
             listItem.appendChild(detailsBtn);
             detailsBtn.textContent = 'Details!';
-            detailsBtn.setAttribute ("onclick",'details('+idx+')');
+            detailsBtn.setAttribute("onclick", 'details(' + idx + ')');
             // Set an event handler so that when the button is clicked, the deleteItem()
             // function is run
             deleteBtn.onclick = deleteItem;
@@ -230,6 +237,76 @@ window.onload = function () {
    };
 }
 
+function searchData(keyword) {
+   // Here we empty the contents of the list element each time the display is updated
+   // If you didn't do this, you'd get duplicates listed each time a new note is added
+   while (list.firstChild) {
+      list.removeChild(list.firstChild);
+   }
+
+   // Open our object store and then get a cursor - which iterates through all the
+   // different data items in the store
+   let objectStore = db.transaction('carAuction').objectStore('carAuction');
+   objectStore.openCursor().onsuccess = function (e) {
+
+      // Get a reference to the cursor
+      let cursor = e.target.result;
+
+      // If there is still another data item to iterate through, keep running this code
+      if (cursor) {
+         if (cursor.value.make.indexOf(keyword.toUpperCase()) !== -1 || cursor.value.model.indexOf(keyword.toUpperCase()) !== -1 || cursor.value.city.indexOf(keyword.toUpperCase()) !== -1) {
+            console.log("We found a row with value: " + JSON.stringify(cursor.value));
+
+            // Create a list item, h3, and p to put each data item inside when displaying it
+            // structure the HTML fragment, and append it inside the list
+           
+            let listItem = document.createElement('li');
+            let h3 = document.createElement('h4');
+            let para = document.createElement('p');
+            let para2 = document.createElement('p');
+            listItem.appendChild(h3);
+            listItem.appendChild(para);
+            listItem.appendChild(para2);
+
+            list.appendChild(listItem);
+
+            // Put the data from the cursor inside the h3 and para
+            para.textContent = "Owner: " + cursor.value.firstName + " " + cursor.value.lastName + " City: " + cursor.value.city;
+            para2.html = "<h5>Price: " + cursor.value.price + "</h5>";
+            h3.textContent = cursor.value.make + " " + cursor.value.model;
+            var idx = cursor.value.id;
+            // Store the ID of the data item inside an attribute on the listItem, so we know
+            // which item it corresponds to. This will be useful later when we want to delete items
+            listItem.setAttribute('data-aution-id', cursor.value.id);
+
+
+
+            let detailsBtn = document.createElement('button');
+            listItem.appendChild(detailsBtn);
+            detailsBtn.textContent = 'Details!';
+            detailsBtn.setAttribute("onclick", 'details(' + idx + ')');
+            // Set an event handler so that when the button is clicked, the deleteItem()
+            // function is run
+
+
+            // Iterate to the next item in the cursor
+            cursor.continue();
+         }
+      } else {
+         // Again, if list item is empty, display a 'No notes stored' message
+         if (!list.firstChild) {
+            let listItem = document.createElement('li');
+            listItem.textContent = 'No cars in auction matching your search';
+            list.appendChild(listItem);
+         }
+      }
+      // if there are no more cursor items to iterate through, say so
+      console.log('No data to display');
+
+   }
+   showHome();
+}
+
 function details(ex) {
    // retrieve the name of the task we want to delete. We need
    // to convert it to a number before trying it use it with IDB; IDB key
@@ -240,47 +317,46 @@ function details(ex) {
    const cardList = document.querySelector('#cardList');
    const cl1 = document.querySelector('#cl1');
    const cl2 = document.querySelector('#cl2');
-   
+
    let listItem = document.createElement('li');
    let h3 = document.createElement('h4');
-   
+
    listItem.appendChild(h3);
-   
+
    // Open our object store and then get a cursor - which iterates through all the
    // different data items in the store
    let objectStore = db.transaction('carAuction').objectStore('carAuction');
    objectStore.openCursor().onsuccess = function (e) {
 
       // Get a reference to the cursor
-    
-     
-			//Since our store uses an int as a primary key, that is what we are getting
-			//The cool part is when you start using indexes...
-			var deferred = $.Deferred(),
-			
-			request = objectStore.get(parseInt(ex));
 
-			request.onsuccess = function (evt) {
-            var x=evt.target.result;
-            const uri="https://www.jdpower.com/cars/"+x.year+"/"+x.make+"/"+x.model;
-				console.log(evt);
-				deferred.resolve(evt.target.result);
-            
-            cardTitle.textContent="Vehicle: "+x.make+" "+x.model+" "+x.year;
-            cardText.textContent=x.firstName+" "+x.lastName+" From "+x.address;
-            cardText.innerHTML="<p> Phone "+x.phone+" Email: "+x.email+"</p> <br />";
-            cl1.setAttribute("href",uri);
-            
-            cardImg.setAttribute("src",uri);
-            showDetails();
-			};
 
-			request.onerror = function (evt) {
-				deferred.reject("DBError: could not get " + index + " from " + testStoreName);
-			};
+      //Since our store uses an int as a primary key, that is what we are getting
+      //The cool part is when you start using indexes...
+      var deferred = $.Deferred(),
 
-			return deferred.promise();
-		
+         request = objectStore.get(parseInt(ex));
+
+      request.onsuccess = function (evt) {
+         var x = evt.target.result;
+         const uri = "https://www.jdpower.com/cars/" + x.year + "/" + x.make + "/" + x.model;
+         console.log(evt);
+         deferred.resolve(evt.target.result);
+
+         cardTitle.textContent = "Vehicle: " + x.make + " " + x.model + " " + x.year;
+         cardText.innerHTML = "<h5>Price " + x.price + "</h5><p>Name: <b>" + x.firstName + " " + x.lastName + "</b></p><p> Address: " + x.address + " City: " + x.city + " Province: " + x.province + " Postal Code " + x.postalCode + "<p><h7> Phone " + x.phone + "</h7></p><p><h7> Email: " + x.email + "</h7></p> <br />";
+         cl1.setAttribute("href", uri);
+
+         cardImg.setAttribute("src", "https://www.jdpower.com/images/image-placeholder.svg");
+         showDetails();
+      };
+
+      request.onerror = function (evt) {
+         deferred.reject("DBError: could not get " + index + " from " + testStoreName);
+      };
+
+      return deferred.promise();
+
    }
 }
 $(document).ready(function () {
@@ -319,7 +395,9 @@ function showHome() {
    listDiv.style.display = "block";
    homeLink.classList.add('active');
    createLink.classList.remove('active');
+   location.href="index.html";
 }
+
 function showDetails() {
    createDiv.style.display = "none";
    detailsDiv.style.display = "block";
@@ -327,23 +405,26 @@ function showDetails() {
    homeLink.classList.add('active');
    createLink.classList.remove('active');
 }
-(function() {
+(function () {
    'use strict';
-   window.addEventListener('load', function() {
-     // Fetch all the forms we want to apply custom Bootstrap validation styles to
-     var forms = document.getElementsByClassName('needs-validation');
-     // Loop over them and prevent submission
-     var validation = Array.prototype.filter.call(forms, function(form) {
-       form.addEventListener('submit', function(event) {
-         if (form.checkValidity() === false) {
-           event.preventDefault();
-           event.stopPropagation();
-         }
-         form.classList.add('was-validated');
-       }, false);
-     });
+   window.addEventListener('load', function () {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function (form) {
+         form.addEventListener('submit', function (event) {
+            if (form.checkValidity() === false) {
+               
+               event.preventDefault();
+               event.stopPropagation();
+            }
+            
+            form.classList.add('was-validated');
+         }, false);
+      });
    }, false);
- })();
+})();
+
 function checkPostal(postal) {
    var regex = new RegExp(/^[ABCEGHJKLMNPRSTVXY]\d[ABCEGHJKLMNPRSTVWXYZ]( )?\d[ABCEGHJKLMNPRSTVWXYZ]\d$/i);
    if (regex.test(postal.value))
@@ -365,3 +446,9 @@ function PhoneValidation(phoneNumber) {
    }
 
 }
+
+function search() {
+   searchData(searchTb.value);
+}
+
+function myInitFunction() {}
