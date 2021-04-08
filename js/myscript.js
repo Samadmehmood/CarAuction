@@ -304,7 +304,11 @@ function searchData(keyword) {
       console.log('No data to display');
 
    }
-   showHome();
+   createDiv.style.display = "none";
+   detailsDiv.style.display = "none";
+   listDiv.style.display = "block";
+   homeLink.classList.add('active');
+   createLink.classList.remove('active');
 }
 
 function details(ex) {
